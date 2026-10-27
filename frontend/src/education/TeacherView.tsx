@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import {
   ShieldCheck,
   CheckCircle2,
+  AlertTriangle,
   UserCheck,
   Clock,
   Info,
@@ -63,7 +64,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ demo }) => {
           <button
             type="button"
             onClick={() => actions.setRole('teacher')}
-            className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-2xs transition-colors shrink-0 cursor-pointer"
+            className="min-h-[44px] md:min-h-[38px] px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-2xs transition-colors shrink-0 cursor-pointer flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"
           >
             Chuyển sang Giáo viên
           </button>
@@ -125,12 +126,22 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ demo }) => {
                     <div className="flex items-center space-x-2">
                       <span className="font-mono text-[10px] text-slate-400">{p.id}</span>
                       <strong className="text-slate-800 text-[13px]">{p.title}</strong>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${
                         p.status === 'approved'
                           ? 'bg-emerald-100 text-emerald-800'
                           : 'bg-rose-100 text-rose-800'
                       }`}>
-                        {p.status === 'approved' ? '✓ Đã duyệt' : '⚠ Yêu cầu sửa'}
+                        {p.status === 'approved' ? (
+                          <>
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" aria-hidden="true" />
+                            <span>Đã duyệt</span>
+                          </>
+                        ) : (
+                          <>
+                            <AlertTriangle className="w-3 h-3 text-rose-600 shrink-0" aria-hidden="true" />
+                            <span>Yêu cầu sửa</span>
+                          </>
+                        )}
                       </span>
                     </div>
                     {p.feedback && (
@@ -190,8 +201,9 @@ const PendingPlanReviewCard: React.FC<PendingPlanReviewCardProps> = ({
           </p>
         </div>
 
-        <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full self-start sm:self-auto">
-          ● Chờ duyệt
+        <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full self-start sm:self-auto inline-flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" aria-hidden="true" />
+          <span>Chờ duyệt</span>
         </span>
       </div>
 
@@ -245,7 +257,7 @@ const PendingPlanReviewCard: React.FC<PendingPlanReviewCardProps> = ({
           type="button"
           onClick={() => onDecide('changes_requested', feedback, steps)}
           disabled={!isTeacher}
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-amber-900 bg-amber-100 hover:bg-amber-200 disabled:opacity-50 transition-colors cursor-pointer"
+          className="min-h-[44px] md:min-h-[38px] px-4 py-2 rounded-xl text-xs font-semibold text-amber-900 bg-amber-100 hover:bg-amber-200 disabled:opacity-50 transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"
         >
           Yêu cầu chỉnh sửa
         </button>
@@ -254,9 +266,9 @@ const PendingPlanReviewCard: React.FC<PendingPlanReviewCardProps> = ({
           type="button"
           onClick={() => onDecide('approved', feedback, steps)}
           disabled={!isTeacher}
-          className="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 shadow-2xs transition-colors flex items-center space-x-1.5 cursor-pointer"
+          className="min-h-[44px] md:min-h-[38px] px-5 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 shadow-2xs transition-colors flex items-center justify-center space-x-1.5 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
         >
-          <Check className="w-3.5 h-3.5" />
+          <Check className="w-3.5 h-3.5" aria-hidden="true" />
           <span>Duyệt & giao bài</span>
         </button>
       </div>
