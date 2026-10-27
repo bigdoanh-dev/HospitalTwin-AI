@@ -1,13 +1,13 @@
 {
-  "name": "hospital-twin-ai",
+  "name": "eduagents-demo",
   "private": true,
   "version": "0.1.0",
+  "engines": { "node": ">=22.18.0" },
   "scripts": {
-    "dev": "./scripts/dev.sh",
-    "dev:frontend": "npm --prefix frontend run dev",
-    "dev:backend": "cd backend && PYTHONPATH=. ./.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload",
+    "setup": "npm --prefix frontend ci",
+    "dev": "npm --prefix frontend run dev",
     "build": "npm --prefix frontend run build",
-    "test:backend": "cd backend && PYTHONPATH=. ./.venv/bin/pytest tests/",
-    "setup": "./scripts/setup.sh"
+    "preview": "npm --prefix frontend run preview -- --host 127.0.0.1 --port 5174",
+    "test": "node --test frontend/tests/*.test.mjs"
   }
 }
