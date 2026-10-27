@@ -1,0 +1,20 @@
+import React, { useState, useEffect } from 'react';
+import { Video, Power, RefreshCw, Users, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { api } from '../services/api';
+import { CameraData } from '../types/hospital';
+export const CameraView: React.FC<{ cameras?: CameraData[]; onSelectRoom: (id: string) => void }> = ({ cameras: initial = [], onSelectRoom }) => {
+  const [cameras, setCameras] = useState(initial);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState('');
+  const canEdit = ['admin', 'operator', 'camera_operator'].includes(api.getCurrentUser()?.role || '');
+  useEffect(() => setCameras(initial), [initial]);
+  const load = async () => { try { setCameras(await api.listCameras()); } catch (err: any) { setError(err.message); } };
+  const toggle = async (cam: CameraData) => { setBusy(cam.id); setError(''); try { await api.updateCamera(cam.id, !cam.is_online); await load(); } catch (err: any) { setError(err.message); } finally { setBusy(''); } };
+  return <div className="space-y-5"><div className="flex items-center justify-between gap-3"><div><h1 className="text-2xl font-bold tracking-tight">Camera không gian</h1><p className="text-xs text-slate-500 mt-1">Quan sát tổng hợp theo khu vực · Không kết nối luồng camera thật</p></div><button aria-label="Làm mới camera" onClick={load} className="p-2 rounded-lg border bg-white text-slate-500"><RefreshCw size={16} /></button></div>
+    {error && <p role="alert" className="text-red-600 text-xs">{error}</p>}
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">{cameras.map((cam, idx) => <section key={cam.id} className="rounded-2xl border bg-white p-3"><div className="flex items-center justify-between gap-2 mb-3"><h2 className="font-semibold text-xs truncate" title={cam.name}>{cam.name}</h2><button disabled={!canEdit || busy === cam.id} onClick={() => toggle(cam)} aria-label={`${cam.is_online ? 'Tắt' : 'Bật'} ${cam.name}`} className={`p-2 rounded-lg disabled:opacity-40 ${cam.is_online ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'}`}><Power size={14} /></button></div>
+      <div className="relative h-48 overflow-hidden rounded-xl bg-slate-900"><svg viewBox="0 0 360 190" className="w-full h-full" aria-label="Minh họa không gian camera tổng hợp"><path d="M0 0H360V100L250 160H80L0 100Z" fill="#26364a"/><path d="M0 100L80 160H250L360 100V190H0Z" fill="#475569"/><path d="M0 100H360M80 160L40 190M250 160L290 190" stroke="#64748b"/><rect x="40" y="42" width="280" height="36" rx="3" fill="#64748b"/>{Array.from({length:6},(_,i)=><rect key={i} x={50+i*45} y="48" width="27" height="18" rx="2" fill="#94a3b8"/>)}{cam.is_online && Array.from({length:Math.min(cam.people_count,24)},(_,i)=><g key={i} transform={`translate(${52+(i%8)*36+idx%3*3} ${96+Math.floor(i/8)*23})`}><circle cy="-5" r="3.5" fill="#cbd5e1"/><path d="M-4 0H4L5 13H-5Z" fill={i%3===0?'#7dd3fc':'#94a3b8'}/></g>)}</svg><div className="absolute top-3 left-3 rounded-full bg-black/60 px-2 py-1 text-[9px] tracking-wider text-cyan-100 flex gap-1.5 items-center"><Video size={11} />MINH HỌA TỔNG HỢP</div>{!cam.is_online && <div className="absolute inset-0 bg-slate-950/80 flex items-center justify-center text-xs text-slate-300">Camera ngoại tuyến</div>}<span className="absolute bottom-3 left-3 text-[10px] font-mono text-slate-300">{cam.id}</span></div>
+      <div className="mt-3 flex items-center justify-between"><div className="flex gap-2 items-center text-xs text-slate-500"><Users size={15} /><b className="text-lg text-slate-800">{cam.is_online ? cam.people_count : '—'}</b>có mặt</div><button onClick={() => onSelectRoom(cam.room_id)} className="flex gap-1 text-blue-600 text-[11px] font-semibold">Xem khu vực<ArrowUpRight size={13}/></button></div></section>)}</div>
+    <p className="text-xs text-slate-500 flex items-start gap-2 p-4 rounded-xl border border-blue-100 bg-blue-50"><ShieldCheck size={17} className="text-blue-600 shrink-0" />Số người có mặt lấy từ bộ dữ liệu tổng hợp, không phải kết quả nhận diện hình ảnh. Hình người minh họa có giới hạn; không tương đương số người chờ phục vụ.</p>
+  </div>;
+};

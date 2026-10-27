@@ -26,6 +26,7 @@ def get_building_spatial_data(db: Session = Depends(get_db)):
                 "name": r.name,
                 "room_type": r.room_type,
                 "department_id": r.department_id,
+                "floor_id": f.id,
                 "x": r.x,
                 "y": r.y,
                 "z": r.z,
@@ -134,7 +135,7 @@ def spatial_route(source: str, target: str, db: Session = Depends(get_db)):
     nodes, adjacency = {}, {}
     for room in rooms:
         nodes[room.id] = [room.x, room.y + .2, room.z]
-        nodes[f"CORRIDOR-{room.floor_id}"] = [-6, room.y + .2, 0]
+        nodes[f"CORRIDOR-{room.floor_id}"] = [22, room.y + .2, 0]
     def connect(a, b, factor=1):
         distance = math.dist(nodes[a], nodes[b]) * factor
         adjacency.setdefault(a, []).append((b, distance))

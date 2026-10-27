@@ -41,8 +41,8 @@ def seed_database():
                 counters=counters, active_staff=staff, current_queue_length=0,
                 current_waiting_time=0, status="normal"))
         db.add(Room(id="ROOM-INS-101", floor_id="FL-1F", department_id="KHOA-KHAM",
-            name="Xác minh BHYT", room_type="insurance", x=-20, y=0, z=-15,
-            width=10, length=7, capacity=25, counters=2, active_staff=2,
+            name="Xác minh BHYT", room_type="insurance", x=-6, y=0, z=-14,
+            width=10, length=8, capacity=25, counters=2, active_staff=2,
             current_queue_length=0, current_waiting_time=0, status="normal"))
         db.flush()
         for sid, rid, name, typ in SP_DATA:

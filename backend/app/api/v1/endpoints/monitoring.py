@@ -7,7 +7,7 @@ from app.core.deps import roles
 from app.models.models import Room, PatientVisit, StepExecution, Alert, OperationalEvent
 from app.services.domain import clock, room_metrics, ACTIVE_WAIT, SERVICE_ROOMS
 
-VIEW_ROLES = ("director", "operator", "analyst", "department_manager", "maintenance", "camera_operator", "receptionist", "doctor", "lab_staff")
+VIEW_ROLES = ("director", "operator", "analyst", "department_manager", "maintenance", "camera_operator", "receptionist", "doctor", "lab_staff", "cashier", "pharmacy_staff")
 router = APIRouter(dependencies=[Depends(roles(*VIEW_ROLES))])
 
 
